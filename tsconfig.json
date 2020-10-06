@@ -1,0 +1,19 @@
+{
+    "include": ["./src/**/*.ts", "./src/**/*.tsx"],
+    "compilerOptions": {
+      "jsx": "react",
+      "target": "es2020",
+      "module": "commonjs",
+      "sourceMap": true,
+      "strict": true,
+      "noUnusedLocals": true,
+      "noImplicitReturns": true,
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+        "baseUrl": "./",
+        "paths": {
+        "*" : ["./src/@types/*"]
+      }
+    }
+  }
+  

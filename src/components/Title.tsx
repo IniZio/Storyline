@@ -14,6 +14,7 @@ export default defineComponent({
       <>
         <h1 class="title">
           { props.title }
+          <button class="button is-primary">Hello</button>
         </h1>
       </>
   }

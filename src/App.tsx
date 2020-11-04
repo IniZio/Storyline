@@ -24,13 +24,19 @@ export default defineComponent({
     
     return () =>
       <ThemeProvider theme={{ primary: 'green' }}>
-        <div class="container">
-          <StyledTitle>Styled Title</StyledTitle>
-          <Playground />
-          <input onInput={onInput} value={title.value} />
-          <Title class="Tomato" title={title.value}/>
-          Hello World
-        </div>
+        <section class="section">
+          <div class="container">
+            <h1 class="title">
+              Hello World
+            </h1>
+            <p class="subtitle">
+              My first website with <strong>Bulma</strong>!
+            </p> <StyledTitle>Styled Title</StyledTitle>
+            <Playground />
+            <input onInput={onInput} value={title.value} />
+            <Title class="Tomato" title={title.value}/>
+          </div>
+        </section>
       </ThemeProvider>
   }
 })

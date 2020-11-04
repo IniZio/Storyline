@@ -1,22 +1,42 @@
 <template>
-  <div>Playground</div>
-  {{ time }}
+  <div>Do something</div>
+  <button class="button" v-if="paused" @click="start">Start</button>
+  <button class="button" v-if="started" @click="pause">Pause</button>
+  <div>{{ timelines }}</div>
+
+  <span class="icon  has-text-success">
+    <i class="fas fa-home"></i>
+  </span>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 
-  export default defineComponent({
-    setup() {
-      const time = ref(0);
-      
-      setInterval(() => {
-        time.value++;
-      }, 1000)
+function useTimeline() {
+  const timelines = ref<Date[][]>([]);
 
-      return {
-        time
-      };
-    }
-  })
+  const start = () => timelines.value.push([new Date()]);
+  const pause = () => timelines.value[timelines.value.length - 1].push(new Date());
+  
+  const paused = computed(() => {
+    const latestSlot = timelines.value[timelines.value.length - 1];
+
+    return !latestSlot || latestSlot.length === 2;
+  });
+  const started = computed(() => !paused.value)
+
+  return {
+    timelines,
+    start,
+    pause,
+    paused,
+    started,
+  }
+}
+
+export default defineComponent({
+  setup() {
+    return useTimeline();
+  }
+});
 </script>

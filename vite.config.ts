@@ -4,6 +4,7 @@
  */
 import { join } from 'path'
 import { UserConfig } from 'vite'
+import { VitePWA } from 'vite-plugin-pwa'
 import dotenv from 'dotenv'
 
 dotenv.config({ path: join(__dirname, '.env') })
@@ -30,7 +31,55 @@ const config: UserConfig = {
         '$primary': '#ee3300',
       }
     }
-  }
+  },
+  plugins: [
+    VitePWA({
+      manifest: {
+        "name": "Marblez",
+        "short_name": "Marblez",
+        "start_url": "./",
+        "icons": [{
+          "src": "/logo-192x192.webp",
+          "sizes": "192x192",
+          "type": "image/webp"
+        }, {
+          "src": "/logo-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }, {
+          "src": "/logo-384x384.webp",
+          "sizes": "384x384",
+          "type": "image/webp"
+        }, {
+          "src": "/logo-384x384.png",
+          "sizes": "384x384",
+          "type": "image/png"
+        }, {
+          "src": "/logo-512x512.webp",
+          "sizes": "512x512",
+          "type": "image/webp"
+        }, {
+          "src": "/logo-512x512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }],
+        "theme_color": "#FFF",
+        "background_color": "#FFF",
+        "display": "standalone"
+      },
+      workbox: {
+        clientsClaim: true,
+        skipWaiting: true,
+        inlineWorkboxRuntime: true,
+        runtimeCaching: [
+          {
+            urlPattern: /.*/,
+            handler: 'NetworkFirst',
+          },
+        ],
+      }
+    })
+  ]
 }
 
 export default config

@@ -3,7 +3,7 @@ import { createApp } from 'vue'
 import App from './App'
 import './index.scss'
 
-import 'vuesax/dist/vuesax.css' //Vuesax styles
+import 'bulma/css/bulma.css'
 
 // const electron:any = require('electron')
 // const ipc:any = electron.ipcRenderer

@@ -1,7 +1,7 @@
 import { theme } from 'styled-tools';
 import { defineComponent, ref } from 'vue'
 import styled, {ThemeProvider} from 'vue3-styled-components'
-import Playground from './components/Timer.vue';
+import Task from './components/Task.vue';
 
 import Title from './components/Title'
 
@@ -32,7 +32,7 @@ export default defineComponent({
             <p class="subtitle">
               My first website with <strong>Bulma</strong>!
             </p> <StyledTitle>Styled Title</StyledTitle>
-            <Playground />
+            <Task />
             <input onInput={onInput} value={title.value} />
             <Title class="Tomato" title={title.value}/>
           </div>

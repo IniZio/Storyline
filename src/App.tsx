@@ -1,7 +1,8 @@
 import { theme } from 'styled-tools';
 import { defineComponent, ref } from 'vue'
 import styled, {ThemeProvider} from 'vue3-styled-components'
-import Tinmeline from './components/Timeline.vue';
+import Timeline from './components/Timeline.vue';
+import Tasks from './components/Tasks.vue';
 
 import Title from './components/Title'
 
@@ -31,10 +32,10 @@ export default defineComponent({
         <FullContainer class="has-background-primary">
           <section class="section">
             <div class="container is-max-desktop">
-              <h1 class="title has-text-white is-size-1 is-family-primary has-text-weight-bold">
-                Timeline
+              <h1 class="title has-text-white is-size-1 is-family-primary has-text-weight-bold pt-2 pb-6`">
+                Storyline
               </h1>
-              <Tinmeline />
+              <Timeline />
               {/* <input onInput={onInput} value={title.value} />
               <Title class="Tomato" title={title.value}/> */}
             </div>

@@ -42,10 +42,12 @@
     }
   },
   "dependencies": {
+    "@creativebulma/bulma-tooltip": "^1.2.0",
     "@egoist/vue-emotion": "^0.6.2",
     "bulma": "^0.9.1",
     "date-fns": "^2.16.1",
     "dayjs": "^1.9.5",
+    "nanoid": "^3.1.16",
     "styled-tools": "^1.7.2",
     "vue": "^3.0.0",
     "vue3-styled-components": "^1.0.1",
@@ -59,6 +61,7 @@
     "@types/concurrently": "^5.2.1",
     "@types/eslint": "^7.2.3",
     "@types/minimist": "^1.2.0",
+    "@types/nanoid": "^2.1.0",
     "@types/sass": "^1.16.0",
     "@types/wait-on": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^4.4.0",

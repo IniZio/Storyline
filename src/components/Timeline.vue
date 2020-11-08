@@ -1,58 +1,99 @@
 <template>
-  <div 
-    v-for="(timeslot, index) in timeline" 
-    :key="timeslot.start"
-    class="card mt-2 is-flex is-align-items-center"
-  >
-    <a class="delete mx-4" @click="timeline.splice(index, 1)"></a>
-    <input 
-      v-model="timeslot.name"
-      class="input"
-      type="text"
-    >
-    <div v-if="timeslot.start" class="mx-3 is-family-primary has-text-weight-semibold1">
-      {{ humanizeDuration((timeslot.end || currentTime) - timeslot.start) }}
+  <div class="columns">
+    <div class="column is-one-third">
+      <div v-for="(task, index) in tasks" class="card mb-4" :key="index">
+        <header class="card-header p-2 is-flex is-align-items-center">
+          <a class="delete mr-2" @click="tasks.splice(index, 1)"></a>
+          <input type="text" class="input" v-model="task.name">
+        </header>
+        <!-- <div class="card-content">
+          <textarea class="textarea" v-model="task.description" rows="3" />
+        </div> -->
+      </div>
+      <button class="button mt-4" @click="appendEmptyTask">
+        <span class="icon is-small">
+          <i class="fas fa-plus"></i>
+        </span>
+      </button>
     </div>
-    <div v-if="index === timeline.length - 1">
-      <button 
-        v-if="paused" 
-        class="button"
-        :disabled="!timeslot.name"
-        @click="start" 
+    <div class="column is-two-thirds">
+      <div
+        v-for="(timeslot, index) in timeline" 
+        :key="timeslot.start"
       >
-        <span class="icon is-small">
-          <i class="fas fa-play"></i>
-        </span>
-      </button>
-      <button 
-        v-if="started"
-        class="button" 
-        :disabled="!timeslot.name"
-        @click="pause"
-      >
-        <span class="icon is-small">
-          <i class="fas fa-pause"></i>
-        </span>
-      </button>
+        <div 
+          v-if="timeslot.start"
+          class="mb-2 is-size-7 has-text-white" 
+          :data-tooltip="timeslot.start"
+        >
+          <span>{{ humanizeTime(timeslot.start) }}</span>          
+          <span class="ml-3 is-italic">({{ relativeTime(timeslot.start) }})</span>          
+        </div>
+        <div 
+          class="card mb-2 is-flex is-align-items-center"
+        >
+          <a class="delete mx-4" @click="timeline.splice(index, 1)"></a>
+          <input 
+            v-model="timeslot.name"
+            class="input"
+            type="text"
+          >
+          <div class="select">
+            <select
+              v-model="timeslot.taskId"
+            >
+              <option v-for="task in tasks" :key="task.id" :value="task.id">{{ task.name }}</option>
+            </select>
+          </div>
+          <div v-if="timeslot.start" class="mx-3 is-family-primary has-text-weight-semibold1">
+            {{ humanizeDuration((timeslot.end || currentTime) - timeslot.start) }}
+          </div>
+          <div v-if="index === timeline.length - 1">
+            <button 
+              v-if="paused" 
+              class="button"
+              :disabled="!timeslot.name"
+              @click="start" 
+            >
+              <span class="icon is-small">
+                <i class="fas fa-play"></i>
+              </span>
+            </button>
+            <button 
+              v-if="started"
+              class="button" 
+              :disabled="!timeslot.name"
+              @click="pause"
+            >
+              <span class="icon is-small">
+                <i class="fas fa-pause"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <textarea 
+        class="textarea is-family-code mt-6" 
+        rows="15"
+        :value="JSON.stringify(timeline, null, 4)" 
+      />
     </div>
   </div>
-  <textarea 
-    class="textarea is-family-code mt-6" 
-    rows="15"
-    :value="JSON.stringify(timeline, null, 4)" 
-  />
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, onBeforeUnmount, onMounted, ref, toRefs, watchEffect } from "vue";
 import utc from 'dayjs/plugin/utc';
+import relativeTime from 'dayjs/plugin/relativeTime'
 import dayjs from 'dayjs'
 dayjs.extend(utc)
+dayjs.extend(relativeTime)
 
 type TimeSlot = {
   start: Date,
   end: Date,
   name: string,
+  taskId: string;
 }
 
 type LastTimeSlot = Partial<TimeSlot> & {
@@ -63,6 +104,7 @@ type SerializedTimeSlot = {
   start: string;
   end?: string;
   name: string;
+  taskId: string;
 }
 
 function useTimeline() {
@@ -118,7 +160,8 @@ function useTimeline() {
           (timeslotRaw: SerializedTimeSlot) => ({
             name: timeslotRaw.name,
             start: timeslotRaw.start ? dayjs(timeslotRaw.start).toDate() : undefined,
-            end: timeslotRaw.end ? dayjs(timeslotRaw.end).toDate() : undefined
+            end: timeslotRaw.end ? dayjs(timeslotRaw.end).toDate() : undefined,
+            taskId: timeslotRaw.taskId
           })
         );
       }
@@ -155,14 +198,59 @@ function useTimeline() {
   }
 }
 
+import { nanoid } from 'nanoid'
+
+type Task = {
+  id: string;
+  name: string;
+  description?: string;
+};
+
+function useTasks() {
+  const tasks = ref<Task[]>([]);
+  const tasksReady = ref(false);
+
+  const appendEmptyTask = () => tasks.value.push({
+    id: nanoid(),
+    name: ''
+  })
+  
+  onMounted(
+    () => {
+      const tasksJSON = localStorage.getItem('tasks')
+      if (tasksJSON) {
+        tasks.value = JSON.parse(tasksJSON);
+      }
+      tasksReady.value = true;
+    }
+  );
+  watchEffect(
+    () => {
+      if (tasksReady.value) {
+        localStorage.setItem('tasks', JSON.stringify(tasks.value));
+      }
+    }
+  )
+
+  return {
+    tasks,
+    appendEmptyTask,
+  }
+}
+
 export default defineComponent({
   setup() {
     const humanizeDuration = (milliseconds: number) => {
       return dayjs(milliseconds).utc().format('HH:mm:ss')
     };
+    const humanizeTime = (time: Date) =>  dayjs(time).format('HH:mm:ss')
+    const relativeTime = (time: Date) => dayjs(time).fromNow()
     return {
       ...toRefs(useTimeline()),
-      humanizeDuration
+      ...toRefs(useTasks()),
+      humanizeDuration,
+      relativeTime,
+      humanizeTime,
     };
   }
 });

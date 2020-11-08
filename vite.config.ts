@@ -22,7 +22,10 @@ const config: UserConfig = {
     external: ''
   },
   optimizeDeps: {
-    include: ['dayjs/plugin/utc']
+    include: [
+      'dayjs/plugin/utc',
+      'dayjs/plugin/relativeTime'
+    ]
   },
   cssPreprocessOptions: {
     sass: {

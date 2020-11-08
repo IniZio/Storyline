@@ -4,6 +4,7 @@ import App from './App'
 import './index.scss'
 
 import 'bulma/css/bulma.css'
+import '@creativebulma/bulma-tooltip/dist/bulma-tooltip.min.css'
 
 // const electron:any = require('electron')
 // const ipc:any = electron.ipcRenderer

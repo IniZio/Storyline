@@ -1,7 +1,7 @@
 import { theme } from 'styled-tools';
 import { defineComponent, ref } from 'vue'
 import styled, {ThemeProvider} from 'vue3-styled-components'
-import Task from './components/Task.vue';
+import Tinmeline from './components/Timeline.vue';
 
 import Title from './components/Title'
 
@@ -15,6 +15,10 @@ const StyledTitle = styled.h1`
   background-color: ${theme('primary')};
 `;
 
+const FullContainer = styled.div`
+  min-height: 100vh;
+`;
+
 
 export default defineComponent({
   name: 'App',
@@ -24,19 +28,18 @@ export default defineComponent({
     
     return () =>
       <ThemeProvider theme={{ primary: 'green' }}>
-        <section class="section">
-          <div class="container">
-            <h1 class="title">
-              Hello World
-            </h1>
-            <p class="subtitle">
-              My first website with <strong>Bulma</strong>!
-            </p> <StyledTitle>Styled Title</StyledTitle>
-            <Task />
-            <input onInput={onInput} value={title.value} />
-            <Title class="Tomato" title={title.value}/>
-          </div>
-        </section>
+        <FullContainer class="has-background-primary">
+          <section class="section">
+            <div class="container is-max-desktop">
+              <h1 class="title has-text-white is-size-1 is-family-primary has-text-weight-bold">
+                Timeline
+              </h1>
+              <Tinmeline />
+              {/* <input onInput={onInput} value={title.value} />
+              <Title class="Tomato" title={title.value}/> */}
+            </div>
+          </section>
+        </FullContainer>        
       </ThemeProvider>
   }
 })

@@ -21,6 +21,9 @@ const config: UserConfig = {
   rollupInputOptions: {
     external: ''
   },
+  optimizeDeps: {
+    include: ['dayjs/plugin/utc']
+  },
   cssPreprocessOptions: {
     sass: {
       modifyVars: {

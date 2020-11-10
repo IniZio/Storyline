@@ -26,7 +26,13 @@
           class="mb-2 is-size-7 has-text-white" 
           :data-tooltip="timeslot.start"
         >
-          <span>{{ humanizeTime(timeslot.start) }}</span>          
+          <div 
+            v-if="index === 0 || !isSameDay(timeslot.start, timeline[index - 1].start)"
+            class="has-text-weight-bold"
+          >
+            {{ humanizeDate(timeslot.start) }}
+          </div>
+          <span class="has-text-weight-semibold">{{ humanizeTime(timeslot.start) }}</span>          
           <span class="ml-3 is-italic">({{ relativeTime(timeslot.start) }})</span>          
         </div>
         <div 
@@ -83,6 +89,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onBeforeUnmount, onMounted, ref, toRefs, watchEffect } from "vue";
+import { isSameDay } from 'date-fns';
 import utc from 'dayjs/plugin/utc';
 import relativeTime from 'dayjs/plugin/relativeTime'
 import dayjs from 'dayjs'
@@ -243,7 +250,8 @@ export default defineComponent({
     const humanizeDuration = (milliseconds: number) => {
       return dayjs(milliseconds).utc().format('HH:mm:ss')
     };
-    const humanizeTime = (time: Date) =>  dayjs(time).format('HH:mm:ss')
+    const humanizeTime = (time: Date) =>  dayjs(time).format('hh:mm:ss A')
+    const humanizeDate = (time: Date) =>  dayjs(time).format('MMM DD (ddd)')
     const relativeTime = (time: Date) => dayjs(time).fromNow()
     return {
       ...toRefs(useTimeline()),
@@ -251,6 +259,8 @@ export default defineComponent({
       humanizeDuration,
       relativeTime,
       humanizeTime,
+      humanizeDate,
+      isSameDay,
     };
   }
 });
